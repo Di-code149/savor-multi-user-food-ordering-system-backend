@@ -130,5 +130,16 @@ public class FoodOrderService {
     public List<FoodOrder> getBetween(java.time.LocalDate start, java.time.LocalDate end) {
         return foodOrderRepository.findByOrderDateBetweenOrderByOrderDateAsc(start, end);
     }
+
+    public List<Object[]> getStatsByStatus() {
+        return foodOrderRepository.countOrdersPerStatus();
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public String cancelDay(UUID cookId, LocalDate date) {
+        int count = foodOrderRepository.cancelOrdersForCookOnDate(cookId, date, OrderStatus.CANCELLED, OrderStatus.DELIVERED);
+        return count + " food orders cancelled";
+    }
 }
+
 

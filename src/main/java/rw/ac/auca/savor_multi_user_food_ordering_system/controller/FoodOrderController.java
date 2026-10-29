@@ -96,6 +96,18 @@ public class FoodOrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         }
     }
+
+    @GetMapping("/stats/by-status")
+    public ResponseEntity<List<Object[]>> getStatsByStatus() {
+        return ResponseEntity.ok(foodOrderService.getStatsByStatus());
+    }
+
+    @PatchMapping("/cancel-day")
+    public ResponseEntity<String> cancelDay(@RequestParam UUID cookId, @RequestParam String date) {
+        LocalDate orderDate = LocalDate.parse(date);
+        return ResponseEntity.ok(foodOrderService.cancelDay(cookId, orderDate));
+    }
 }
+
 
 
