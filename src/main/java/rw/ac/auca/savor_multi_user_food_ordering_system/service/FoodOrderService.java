@@ -8,6 +8,7 @@ import rw.ac.auca.savor_multi_user_food_ordering_system.repository.CookRepositor
 import rw.ac.auca.savor_multi_user_food_ordering_system.repository.CustomerRepository;
 import rw.ac.auca.savor_multi_user_food_ordering_system.repository.FoodOrderRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,20 +26,52 @@ public class FoodOrderService {
     private CookRepository cookRepository;
 
     public String save(FoodOrder foodOrder) {
+        if (foodOrder.getOrderDate() != null && foodOrder.getOrderDate().isBefore(LocalDate.now())) {
+            return "Food order date cannot be in the past";
+        }
+        if (foodOrder.getCook() != null && foodOrder.getCook().getId() != null) {
+            Optional<rw.ac.auca.savor_multi_user_food_ordering_system.model.Cook> cookOpt = cookRepository.findById(foodOrder.getCook().getId());
+            if (cookOpt.isPresent()) {
+                rw.ac.auca.savor_multi_user_food_ordering_system.model.Cook cook = cookOpt.get();
+                foodOrder.setCook(cook);
+                if (foodOrderRepository.existsByCookAndOrderDateAndStatusNot(cook, foodOrder.getOrderDate(), OrderStatus.CANCELLED)) {
+                    return "Cook already has an order on that date";
+                }
+            }
+        }
         if (foodOrder.getCustomer() != null && foodOrder.getCustomer().getId() != null) {
             customerRepository.findById(foodOrder.getCustomer().getId())
                     .ifPresent(foodOrder::setCustomer);
         }
-        if (foodOrder.getCook() != null && foodOrder.getCook().getId() != null) {
-            cookRepository.findById(foodOrder.getCook().getId())
-                    .ifPresent(foodOrder::setCook);
-        }
-        if (foodOrder.getStatus() == null) {
-            foodOrder.setStatus(OrderStatus.PENDING);
-        }
+        foodOrder.setStatus(OrderStatus.PENDING);
         foodOrderRepository.save(foodOrder);
         return "Food order saved successfully";
     }
+
+    public String updateStatus(UUID id, OrderStatus newStatus) {
+        Optional<FoodOrder> existing = foodOrderRepository.findById(id);
+        if (existing.isEmpty()) {
+            return "The food order with that id does not exist";
+        }
+        FoodOrder order = existing.get();
+        OrderStatus current = order.getStatus();
+
+        boolean allowed = false;
+        if (current == OrderStatus.PENDING && (newStatus == OrderStatus.PREPARING || newStatus == OrderStatus.CANCELLED)) {
+            allowed = true;
+        } else if (current == OrderStatus.PREPARING && (newStatus == OrderStatus.DELIVERED || newStatus == OrderStatus.CANCELLED)) {
+            allowed = true;
+        }
+
+        if (!allowed) {
+            return "Cannot change status from " + current + " to " + newStatus;
+        }
+
+        order.setStatus(newStatus);
+        foodOrderRepository.save(order);
+        return "Food order status updated successfully";
+    }
+
 
     public List<FoodOrder> getAll() {
         return foodOrderRepository.findAll();

@@ -95,5 +95,46 @@ public class CookService {
     public List<Cook> getByMenuSection(String name) {
         return cookRepository.findCooksByMenuSectionName(name);
     }
+
+    public String addMenuSection(UUID cookId, UUID menuSectionId) {
+        Optional<Cook> cookOpt = cookRepository.findById(cookId);
+        if (cookOpt.isEmpty()) {
+            return "The cook with that id does not exist";
+        }
+        Optional<MenuSection> sectionOpt = menuSectionRepository.findById(menuSectionId);
+        if (sectionOpt.isEmpty()) {
+            return "That menu section does not exist";
+        }
+        Cook cook = cookOpt.get();
+        MenuSection section = sectionOpt.get();
+        boolean alreadyHas = cook.getMenuSections().stream()
+                .anyMatch(ms -> ms.getId().equals(menuSectionId));
+        if (alreadyHas) {
+            return "The cook already has that menu section";
+        }
+        cook.getMenuSections().add(section);
+        cookRepository.save(cook);
+        return "Menu section added to the cook";
+    }
+
+    public String changeKitchenStation(UUID cookId, int stationNumber) {
+        Optional<Cook> cookOpt = cookRepository.findById(cookId);
+        if (cookOpt.isEmpty()) {
+            return "The cook with that id does not exist";
+        }
+        Optional<KitchenStation> stationOpt = kitchenStationRepository.findByStationNumber(stationNumber);
+        if (stationOpt.isEmpty()) {
+            return "The kitchen station with that stationNumber does not exist";
+        }
+        KitchenStation targetStation = stationOpt.get();
+        if (cookRepository.existsByKitchenStation(targetStation)) {
+            return "That kitchen station is taken by another cook";
+        }
+        Cook cook = cookOpt.get();
+        cook.setKitchenStation(targetStation);
+        cookRepository.save(cook);
+        return "Kitchen station changed successfully";
+    }
 }
+
 

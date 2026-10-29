@@ -64,5 +64,34 @@ public class CookController {
     public ResponseEntity<List<Cook>> getByMenuSection(@RequestParam String name) {
         return ResponseEntity.ok(cookService.getByMenuSection(name));
     }
+
+    @PutMapping("/{cookId}/menu-sections/{menuSectionId}")
+    public ResponseEntity<String> addMenuSection(@PathVariable UUID cookId, @PathVariable UUID menuSectionId) {
+        String result = cookService.addMenuSection(cookId, menuSectionId);
+        if ("Menu section added to the cook".equals(result)) {
+            return ResponseEntity.ok(result);
+        } else if ("The cook with that id does not exist".equals(result) || "That menu section does not exist".equals(result)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        } else if ("The cook already has that menu section".equals(result)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+    }
+
+    @PatchMapping("/{cookId}/kitchen-station")
+    public ResponseEntity<String> changeKitchenStation(@PathVariable UUID cookId, @RequestParam int stationNumber) {
+        String result = cookService.changeKitchenStation(cookId, stationNumber);
+        if ("Kitchen station changed successfully".equals(result)) {
+            return ResponseEntity.ok(result);
+        } else if ("The cook with that id does not exist".equals(result) || "The kitchen station with that stationNumber does not exist".equals(result)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        } else if ("That kitchen station is taken by another cook".equals(result)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+    }
 }
+
 

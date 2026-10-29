@@ -84,5 +84,18 @@ public class FoodOrderController {
         LocalDate endDate = LocalDate.parse(end);
         return ResponseEntity.ok(foodOrderService.getBetween(startDate, endDate));
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateStatus(@PathVariable UUID id, @RequestParam OrderStatus status) {
+        String result = foodOrderService.updateStatus(id, status);
+        if ("Food order status updated successfully".equals(result)) {
+            return ResponseEntity.ok(result);
+        } else if ("The food order with that id does not exist".equals(result)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+    }
 }
+
 
