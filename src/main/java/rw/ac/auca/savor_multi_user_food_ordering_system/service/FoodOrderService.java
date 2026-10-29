@@ -25,6 +25,10 @@ public class FoodOrderService {
     @Autowired
     private CookRepository cookRepository;
 
+    @Autowired
+    private rw.ac.auca.savor_multi_user_food_ordering_system.repository.ReviewRepository reviewRepository;
+
+
     public String save(FoodOrder foodOrder) {
         if (foodOrder.getOrderDate() != null && foodOrder.getOrderDate().isBefore(LocalDate.now())) {
             return "Food order date cannot be in the past";
@@ -111,9 +115,13 @@ public class FoodOrderService {
         if (existing.isEmpty()) {
             return "The food order with that id does not exist";
         }
+        if (reviewRepository.existsByFoodOrder(existing.get())) {
+            return "That food order has reviews, delete them first";
+        }
         foodOrderRepository.delete(existing.get());
         return "Food order deleted successfully";
     }
+
 
     public List<FoodOrder> getByStatus(OrderStatus status) {
         return foodOrderRepository.findByStatusOrderByOrderDateAsc(status);
