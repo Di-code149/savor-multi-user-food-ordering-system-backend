@@ -59,4 +59,10 @@ public class CookController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
+
+    @GetMapping("/by-menu-section")
+    public ResponseEntity<List<Cook>> getByMenuSection(@RequestParam String name) {
+        return ResponseEntity.ok(cookService.getByMenuSection(name));
+    }
 }
+

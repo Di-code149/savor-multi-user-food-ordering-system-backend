@@ -64,5 +64,17 @@ public class CustomerController {
     public ResponseEntity<List<Customer>> getByLastName(@RequestParam String lastName) {
         return ResponseEntity.ok(customerService.getByLastName(lastName));
     }
+
+    @GetMapping("/of-cook/{cookId}")
+    public ResponseEntity<?> getCustomersOfCook(@PathVariable UUID cookId) {
+        Optional<List<Customer>> opt = customerService.getCustomersOfCook(cookId);
+        if (opt.isPresent()) {
+            return ResponseEntity.ok(opt.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("The cook with that id does not exist");
+        }
+    }
 }
+
 

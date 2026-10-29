@@ -47,4 +47,9 @@ public class MenuSectionService {
         menuSectionRepository.delete(existing.get());
         return "Menu section deleted successfully";
     }
+
+    public List<MenuSection> getUnusedMenuSections() {
+        return menuSectionRepository.findUnusedMenuSections();
+    }
 }
+

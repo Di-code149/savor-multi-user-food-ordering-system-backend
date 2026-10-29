@@ -91,4 +91,9 @@ public class CookService {
         cookRepository.delete(existing.get());
         return "Cook deleted successfully";
     }
+
+    public List<Cook> getByMenuSection(String name) {
+        return cookRepository.findCooksByMenuSectionName(name);
+    }
 }
+

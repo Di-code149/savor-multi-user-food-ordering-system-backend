@@ -59,4 +59,10 @@ public class MenuSectionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
+
+    @GetMapping("/unused")
+    public ResponseEntity<List<MenuSection>> getUnusedMenuSections() {
+        return ResponseEntity.ok(menuSectionService.getUnusedMenuSections());
+    }
 }
+

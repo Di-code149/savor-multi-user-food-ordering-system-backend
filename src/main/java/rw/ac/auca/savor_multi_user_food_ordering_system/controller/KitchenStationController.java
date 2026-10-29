@@ -59,4 +59,10 @@ public class KitchenStationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
+
+    @GetMapping("/free")
+    public ResponseEntity<List<KitchenStation>> getFreeKitchenStations() {
+        return ResponseEntity.ok(kitchenStationService.getFreeKitchenStations());
+    }
 }
+

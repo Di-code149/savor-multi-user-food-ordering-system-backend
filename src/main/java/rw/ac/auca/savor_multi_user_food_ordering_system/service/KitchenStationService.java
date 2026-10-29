@@ -48,4 +48,9 @@ public class KitchenStationService {
         kitchenStationRepository.delete(existing.get());
         return "Kitchen station deleted successfully";
     }
+
+    public List<KitchenStation> getFreeKitchenStations() {
+        return kitchenStationRepository.findFreeKitchenStations();
+    }
 }
+

@@ -3,6 +3,7 @@ package rw.ac.auca.savor_multi_user_food_ordering_system.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rw.ac.auca.savor_multi_user_food_ordering_system.model.Customer;
+import rw.ac.auca.savor_multi_user_food_ordering_system.repository.CookRepository;
 import rw.ac.auca.savor_multi_user_food_ordering_system.repository.CustomerRepository;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private CookRepository cookRepository;
+
 
     public String save(Customer customer) {
         customerRepository.save(customer);
@@ -54,5 +59,13 @@ public class CustomerService {
     public List<Customer> getByLastName(String lastName) {
         return customerRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
     }
+
+    public Optional<List<Customer>> getCustomersOfCook(UUID cookId) {
+        if (!cookRepository.existsById(cookId)) {
+            return Optional.empty();
+        }
+        return Optional.of(customerRepository.findCustomersByCookId(cookId));
+    }
 }
+
 
