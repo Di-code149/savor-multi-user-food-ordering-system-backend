@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rw.ac.auca.savor_multi_user_food_ordering_system.model.FoodOrder;
+import rw.ac.auca.savor_multi_user_food_ordering_system.model.OrderStatus;
 import rw.ac.auca.savor_multi_user_food_ordering_system.service.FoodOrderService;
 
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,4 +72,17 @@ public class FoodOrderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
+
+    @GetMapping("/by-status")
+    public ResponseEntity<List<FoodOrder>> getByStatus(@RequestParam OrderStatus status) {
+        return ResponseEntity.ok(foodOrderService.getByStatus(status));
+    }
+
+    @GetMapping("/between")
+    public ResponseEntity<List<FoodOrder>> getBetween(@RequestParam String start, @RequestParam String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        return ResponseEntity.ok(foodOrderService.getBetween(startDate, endDate));
+    }
 }
+

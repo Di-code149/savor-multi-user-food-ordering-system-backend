@@ -81,4 +81,13 @@ public class FoodOrderService {
         foodOrderRepository.delete(existing.get());
         return "Food order deleted successfully";
     }
+
+    public List<FoodOrder> getByStatus(OrderStatus status) {
+        return foodOrderRepository.findByStatusOrderByOrderDateAsc(status);
+    }
+
+    public List<FoodOrder> getBetween(java.time.LocalDate start, java.time.LocalDate end) {
+        return foodOrderRepository.findByOrderDateBetweenOrderByOrderDateAsc(start, end);
+    }
 }
+
