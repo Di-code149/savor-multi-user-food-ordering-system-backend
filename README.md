@@ -1,17 +1,17 @@
 # Savor Multi User Food Ordering System Backend
 
-**Course:** Web Technology and Internet · AUCA  
-**Student:** Divine MUHOZA  
-**Student ID:** 27693  
-**Project:** Savor Multi User Food Ordering System (Mid-Term Examination)  
+Course: Web Technology and Internet · AUCA  
+Student: Divine MUHOZA  
+Student ID: 27693  
+Project:Savor Multi User Food Ordering System (Mid-Term Examination)  
 
 ---
 
-## 1. Project Overview
+1. Project Overview
 
 Savor digitises food ordering in a restaurant, managing operations from customer orders to the kitchen and delivery. 
 
-### Domain Model & Architecture
+Domain Model & Architecture
 - **`Customer`**: The customer ordering food. Identified by unique business key `username`.
 - **`Cook`**: Kitchen staff handling orders. Trained in multiple menu sections and assigned to a kitchen station.
 - **`KitchenStation`**: Dedicated kitchen work area identified by `stationNumber` (knows nothing of its cook).
@@ -21,7 +21,7 @@ Savor digitises food ordering in a restaurant, managing operations from customer
 
 ---
 
-## 2. Technology Stack & Configuration
+2. Technology Stack & Configuration
 
 - **Language & Runtime:** Java 17
 - **Framework:** Spring Boot, Spring Data JPA, Spring Web MVC
@@ -29,7 +29,7 @@ Savor digitises food ordering in a restaurant, managing operations from customer
 - **Build Tool:** Apache Maven
 - **Port:** `8080` (Base URL: `http://localhost:8080`)
 
-### Database Configuration (`src/main/resources/application.properties`)
+Database Configuration (`src/main/resources/application.properties`)
 ```properties
 spring.application.name=savor-multi-user-food-ordering-system
 
@@ -46,14 +46,14 @@ spring.jpa.properties.hibernate.format_sql=true
 
 ---
 
-## 3. How to Run the Application
+3. How to Run the Application
 
 ### Prerequisites
 1. PostgreSQL running locally on port `5432` with a database named `savor_db`.
 2. Java 17 (JDK) installed.
 3. Maven installed (or using the included Maven Wrapper).
 
-### Steps to Run
+Steps to Run
 1. Ensure the PostgreSQL database `savor_db` exists:
    ```bash
    psql -U postgres -c "CREATE DATABASE savor_db;"
@@ -74,12 +74,12 @@ spring.jpa.properties.hibernate.format_sql=true
 
 ---
 
-## 4. Postman Collection & Testing
+4. Postman Collection & Testing
 
 The repository includes the complete Postman collection at the root:  
 **`savor-multi-user-food-ordering-system-midterm.postman_collection.json`**
 
-### Test Execution Procedure
+Test Execution Procedure
 1. Import `savor-multi-user-food-ordering-system-midterm.postman_collection.json` into Postman.
 2. Run **Folder 0: Seed data (Step 0, run once)** on an empty database. This seeds:
    - 4 MenuSections: Grills, Local Dishes, Pizza, Desserts (Desserts unassigned).
@@ -98,7 +98,7 @@ The repository includes the complete Postman collection at the root:
 
 ---
 
-## 5. API Endpoints Reference
+API Endpoints Reference
 
 ### Part A: CRUD Endpoints
 | Requirement | Method | Endpoint | Success / Error |
@@ -117,7 +117,7 @@ The repository includes the complete Postman collection at the root:
 | **B2** | `GET` | `/api/food-orders/by-status?status=PENDING` | DERIVED | `findByStatusOrderByOrderDateAsc` |
 | **B3** | `GET` | `/api/food-orders/between?start=...&end=...` | DERIVED | `findByOrderDateBetweenOrderByOrderDateAsc` |
 
-### Part C: JPQL with Joins
+Part C: JPQL with Joins
 | ID | Method | Endpoint | Query Type | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **C1** | `GET` | `/api/cooks/by-menu-section?name=grills` | JPQL | Join collection with `LOWER` |
@@ -125,7 +125,7 @@ The repository includes the complete Postman collection at the root:
 | **C3** | `GET` | `/api/menu-sections/unused` | JPQL | `WHERE m.cooks IS EMPTY` |
 | **C4** | `GET` | `/api/customers/of-cook/{cookId}` | JPQL | `SELECT DISTINCT o.customer FROM FoodOrder o` (404 if cook doesn't exist) |
 
-### Part D: Business Rules
+Part D: Business Rules
 | ID | Method | Endpoint | Description |
 | :--- | :--- | :--- | :--- |
 | **D1** | `POST` | `/api/food-orders/save` | Rejects past dates (400) and duplicate non-cancelled orders for cook on that date (409); forces status to `PENDING` |
@@ -133,7 +133,7 @@ The repository includes the complete Postman collection at the root:
 | **D3** | `PUT` | `/api/cooks/{cookId}/menu-sections/{msId}` | Adds menu section to cook's collection; returns 409 if cook already has it |
 | **D4** | `PATCH`| `/api/cooks/{cookId}/kitchen-station?stationNumber=...` | Assigns cook to kitchen station; returns 409 if taken by another cook |
 
-### Part E: Review Entity
+Part E: Review Entity
 | ID | Method | Endpoint | Query Type | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **E1** | `POST` | `/api/reviews/save?foodOrderId=...` | Business Rule | Writes review for `DELIVERED` orders; sets `reviewDate` to today |
@@ -147,7 +147,7 @@ The repository includes the complete Postman collection at the root:
 | **F1** | `GET` | `/api/food-orders/stats/by-status` | JPQL | `GROUP BY o.status` with `COUNT(o)` |
 | **F2** | `PATCH`| `/api/food-orders/cancel-day?cookId=...&date=...` | JPQL | Bulk update (`@Modifying`, `@Transactional`) non-delivered orders |
 
-### Bonus (+10 Marks)
+Bonus (+10 Marks)
 | ID | Method | Endpoint | Query Type | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **+5** | `GET` | `/api/dashboard/summary` | Reused / Derived | Returns JSON map: `customers`, `cooks`, `freeKitchenStations`, `ordersToday`, `pending`, `reviews` |
@@ -155,9 +155,4 @@ The repository includes the complete Postman collection at the root:
 
 ---
 
-## 6. Live Demo Guidance
 
-During the examination demo:
-- **Success Case:** Show the request returning `200 OK` or `201 Created` with expected JSON payload.
-- **Error Case:** Show the required validation trigger (`400 Bad Request`, `404 Not Found`, or `409 Conflict`).
-- **Code Explanation:** Highlight whether the solution is a pure **DERIVED query** (method name in repository without `@Query`), a **JPQL query** (explicit `@Query`), or a **Service Business Rule**.
