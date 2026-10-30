@@ -140,6 +140,11 @@ public class FoodOrderService {
         int count = foodOrderRepository.cancelOrdersForCookOnDate(cookId, date, OrderStatus.CANCELLED, OrderStatus.DELIVERED);
         return count + " food orders cancelled";
     }
+
+    public org.springframework.data.domain.Page<FoodOrder> getPage(org.springframework.data.domain.Pageable pageable) {
+        return foodOrderRepository.findAll(pageable);
+    }
 }
+
 
 

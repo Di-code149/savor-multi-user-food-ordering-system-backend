@@ -107,7 +107,26 @@ public class FoodOrderController {
         LocalDate orderDate = LocalDate.parse(date);
         return ResponseEntity.ok(foodOrderService.cancelDay(cookId, orderDate));
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<org.springframework.data.domain.Page<FoodOrder>> getPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "orderDate,desc") String sort) {
+        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.unsorted();
+        if (sort != null && !sort.isBlank()) {
+            String[] parts = sort.split(",");
+            String property = parts[0];
+            org.springframework.data.domain.Sort.Direction direction = (parts.length > 1 && parts[1].equalsIgnoreCase("desc"))
+                    ? org.springframework.data.domain.Sort.Direction.DESC
+                    : org.springframework.data.domain.Sort.Direction.ASC;
+            sortObj = org.springframework.data.domain.Sort.by(direction, property);
+        }
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
+        return ResponseEntity.ok(foodOrderService.getPage(pageable));
+    }
 }
+
 
 
 
