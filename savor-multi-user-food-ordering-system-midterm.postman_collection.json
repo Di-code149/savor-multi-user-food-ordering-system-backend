@@ -1,0 +1,4387 @@
+{
+  "info": {
+    "name": "savor-multi-user-food-ordering-system-midterm",
+    "description": "Divine MUHOZA, Student ID 27693. Savor Multi User Food Ordering System, mid-term backend. Base URL http://localhost:8080. Run folder 0 Seed once on an EMPTY database, then run the other folders in order. Dates are generated from today's date by the collection pre-request script.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// D1 rejects an orderDate before today, so every date is built from today's date.",
+          "function pad(n){ return n < 10 ? '0' + n : '' + n; }",
+          "function fmt(off){ var d = new Date(); d.setDate(d.getDate() + off); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }",
+          "var offsets = {d0:0, d5:5, d6:6, d7:7, d8:8, d10:10, d12:12, d15:15, d20:20, d25:25, d40:40, d60:60, rangeEnd:90};",
+          "Object.keys(offsets).forEach(function (k) { pm.collectionVariables.set(k, fmt(offsets[k])); });",
+          "pm.collectionVariables.set('rangeStart', fmt(0));"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "unknownId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "item": [
+    {
+      "name": "0 Seed data (Step 0, run once)",
+      "item": [
+        {
+          "name": "Seed menu section Grills",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Grills\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed menu section Local Dishes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Local Dishes\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed menu section Pizza",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Pizza\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed menu section Desserts (nobody holds it)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Desserts\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed kitchen station 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/kitchen-stations/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "kitchen-stations",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"stationNumber\": 1,\n    \"name\": \"Grill Station\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed kitchen station 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/kitchen-stations/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "kitchen-stations",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"stationNumber\": 2,\n    \"name\": \"Pizza Station\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed kitchen station 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/kitchen-stations/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "kitchen-stations",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"stationNumber\": 3,\n    \"name\": \"Local Kitchen\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed kitchen station 4 (no cook)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/kitchen-stations/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "kitchen-stations",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"stationNumber\": 4,\n    \"name\": \"Pastry Station\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Load menu section ids",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "var list = pm.response.json();",
+                  "var map = {\"Grills\": \"msGrillsId\", \"Local Dishes\": \"msLocalId\", \"Pizza\": \"msPizzaId\", \"Desserts\": \"msDessertsId\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['name'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Load kitchen station ids",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/kitchen-stations/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "kitchen-stations",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "var list = pm.response.json();",
+                  "var map = {\"1\": \"ks1Id\", \"2\": \"ks2Id\", \"3\": \"ks3Id\", \"4\": \"ks4Id\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['stationNumber'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed cook 1 (station 1, Grills + Local Dishes)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Mugabo\",\n    \"phone\": \"0781000001\",\n    \"kitchenStation\": {\n        \"id\": \"{{ks1Id}}\"\n    },\n    \"menuSections\": [\n        {\n            \"id\": \"{{msGrillsId}}\"\n        },\n        {\n            \"id\": \"{{msLocalId}}\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed cook 2 (station 2, Pizza)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Aline\",\n    \"lastName\": \"Uwase\",\n    \"phone\": \"0781000002\",\n    \"kitchenStation\": {\n        \"id\": \"{{ks2Id}}\"\n    },\n    \"menuSections\": [\n        {\n            \"id\": \"{{msPizzaId}}\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed cook 3 (station 3, Grills)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Eric\",\n    \"lastName\": \"Habimana\",\n    \"phone\": \"0781000003\",\n    \"kitchenStation\": {\n        \"id\": \"{{ks3Id}}\"\n    },\n    \"menuSections\": [\n        {\n            \"id\": \"{{msGrillsId}}\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed customer 1 (divine27)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Divine\",\n    \"lastName\": \"Muhoza\",\n    \"username\": \"divine27\",\n    \"deliveryAddress\": \"KG 7 Ave, Kimihurura\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed customer 2 (Muhoza)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Joyce\",\n    \"lastName\": \"Muhoza\",\n    \"username\": \"joyce_m\",\n    \"deliveryAddress\": \"KN 3 Rd, Nyarugenge\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed customer 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Patrick\",\n    \"lastName\": \"Nkusi\",\n    \"username\": \"patrick_n\",\n    \"deliveryAddress\": \"KK 15 St, Kicukiro\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed customer 4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Sandra\",\n    \"lastName\": \"Uwase\",\n    \"username\": \"sandra_u\",\n    \"deliveryAddress\": \"KG 201 St, Gisozi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed customer 5",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Kevin\",\n    \"lastName\": \"Habyarimana\",\n    \"username\": \"kevin_h\",\n    \"deliveryAddress\": \"KG 9 Ave, Remera\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Load cook ids",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "var list = pm.response.json();",
+                  "var map = {\"Jean\": \"cook1Id\", \"Aline\": \"cook2Id\", \"Eric\": \"cook3Id\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['firstName'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Load customer ids",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "var list = pm.response.json();",
+                  "var map = {\"divine27\": \"cust1Id\", \"joyce_m\": \"cust2Id\", \"patrick_n\": \"cust3Id\", \"sandra_u\": \"cust4Id\", \"kevin_h\": \"cust5Id\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['username'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d5}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KG 7 Ave, Kimihurura\",\n    \"totalAmount\": 1000,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook1Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d6}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KG 7 Ave, Kimihurura\",\n    \"totalAmount\": 2000,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook2Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d7}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KG 7 Ave, Kimihurura\",\n    \"totalAmount\": 3000,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook3Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d8}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KN 3 Rd, Nyarugenge\",\n    \"totalAmount\": 4000,\n    \"customer\": {\n        \"id\": \"{{cust2Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook1Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Load order ids (1 to 4)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "var list = pm.response.json();",
+                  "var map = {\"1000\": \"o1Id\", \"2000\": \"o2Id\", \"3000\": \"o3Id\", \"4000\": \"o4Id\", \"5000\": \"o5Id\", \"6000\": \"o6Id\", \"7000\": \"o7Id\", \"8000\": \"o8Id\", \"9000\": \"o9Id\", \"10000\": \"o10Id\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['totalAmount'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 4 to CANCELLED",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o4Id}}/status?status=CANCELLED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o4Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "CANCELLED"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 5",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d8}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KN 3 Rd, Nyarugenge\",\n    \"totalAmount\": 5000,\n    \"customer\": {\n        \"id\": \"{{cust2Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook1Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 6",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d10}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KK 15 St, Kicukiro\",\n    \"totalAmount\": 6000,\n    \"customer\": {\n        \"id\": \"{{cust3Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook2Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 7",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d12}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KG 201 St, Gisozi\",\n    \"totalAmount\": 7000,\n    \"customer\": {\n        \"id\": \"{{cust4Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook3Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 8",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d15}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KG 9 Ave, Remera\",\n    \"totalAmount\": 8000,\n    \"customer\": {\n        \"id\": \"{{cust5Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook2Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 9",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d20}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KK 15 St, Kicukiro\",\n    \"totalAmount\": 9000,\n    \"customer\": {\n        \"id\": \"{{cust3Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook3Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 10",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d25}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"KG 201 St, Gisozi\",\n    \"totalAmount\": 10000,\n    \"customer\": {\n        \"id\": \"{{cust4Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook1Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Load order ids (all 10)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "all"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "var list = pm.response.json();",
+                  "var map = {\"1000\": \"o1Id\", \"2000\": \"o2Id\", \"3000\": \"o3Id\", \"4000\": \"o4Id\", \"5000\": \"o5Id\", \"6000\": \"o6Id\", \"7000\": \"o7Id\", \"8000\": \"o8Id\", \"9000\": \"o9Id\", \"10000\": \"o10Id\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['totalAmount'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 1 to PREPARING",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o1Id}}/status?status=PREPARING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o1Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PREPARING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 1 to DELIVERED",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o1Id}}/status?status=DELIVERED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o1Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "DELIVERED"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 2 to PREPARING",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o2Id}}/status?status=PREPARING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o2Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PREPARING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 2 to DELIVERED",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o2Id}}/status?status=DELIVERED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o2Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "DELIVERED"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seed order 6 to PREPARING",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o6Id}}/status?status=PREPARING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o6Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PREPARING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Step 0 of the paper through the save endpoints. Ids are loaded by the Load requests and stored in collection variables."
+    },
+    {
+      "name": "A Domain model and CRUD",
+      "item": [
+        {
+          "name": "A1 entities and relationships (menu section JSON has no cooks)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "all"
+              ]
+            },
+            "description": "Check the tables, foreign keys and the cook_menu_section join table in PostgreSQL as well (psql or the VS Code extension)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"MenuSection JSON does not loop (no cooks field)\", function () {",
+                  "  var list = pm.response.json();",
+                  "  pm.expect(list.length).to.be.above(0);",
+                  "  list.forEach(function (m) { pm.expect(m).to.not.have.property(\"cooks\"); });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A2 CRUD for the five entities",
+          "item": [
+            {
+              "name": "A2 CRUD menu-sections",
+              "item": [
+                {
+                  "name": "A2 save menu-sections",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/menu-sections/save",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "menu-sections",
+                        "save"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"Temp Section\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                          "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 all menu-sections (loads temp id)",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/menu-sections/all",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "menu-sections",
+                        "all"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                          "var list = pm.response.json();",
+                          "var map = {\"Temp Section\": \"tmpMsId\"};",
+                          "if (Array.isArray(list)) {",
+                          "  list.forEach(function (x) {",
+                          "    var k = x['name'];",
+                          "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                          "  });",
+                          "}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 get menu-sections by id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/menu-sections/{{tmpMsId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "menu-sections",
+                        "{{tmpMsId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 update menu-sections",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/menu-sections/update/{{tmpMsId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "menu-sections",
+                        "update",
+                        "{{tmpMsId}}"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"Temp Section Updated\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 delete menu-sections",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/menu-sections/delete/{{tmpMsId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "menu-sections",
+                        "delete",
+                        "{{tmpMsId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A2 CRUD kitchen-stations",
+              "item": [
+                {
+                  "name": "A2 save kitchen-stations",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/kitchen-stations/save",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "kitchen-stations",
+                        "save"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"stationNumber\": 99,\n    \"name\": \"Temp Station\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                          "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 all kitchen-stations (loads temp id)",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/kitchen-stations/all",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "kitchen-stations",
+                        "all"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                          "var list = pm.response.json();",
+                          "var map = {\"99\": \"tmpKsId\"};",
+                          "if (Array.isArray(list)) {",
+                          "  list.forEach(function (x) {",
+                          "    var k = x['stationNumber'];",
+                          "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                          "  });",
+                          "}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 get kitchen-stations by id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/kitchen-stations/{{tmpKsId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "kitchen-stations",
+                        "{{tmpKsId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 update kitchen-stations",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/kitchen-stations/update/{{tmpKsId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "kitchen-stations",
+                        "update",
+                        "{{tmpKsId}}"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"stationNumber\": 99,\n    \"name\": \"Temp Station Updated\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 delete kitchen-stations",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/kitchen-stations/delete/{{tmpKsId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "kitchen-stations",
+                        "delete",
+                        "{{tmpKsId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A2 CRUD customers",
+              "item": [
+                {
+                  "name": "A2 save customers",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/customers/save",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "customers",
+                        "save"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Temp\",\n    \"lastName\": \"Customer\",\n    \"username\": \"temp_user\",\n    \"deliveryAddress\": \"KG 1 St\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                          "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 all customers (loads temp id)",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/customers/all",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "customers",
+                        "all"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                          "var list = pm.response.json();",
+                          "var map = {\"temp_user\": \"tmpCustId\"};",
+                          "if (Array.isArray(list)) {",
+                          "  list.forEach(function (x) {",
+                          "    var k = x['username'];",
+                          "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                          "  });",
+                          "}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 get customers by id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/customers/{{tmpCustId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "customers",
+                        "{{tmpCustId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 update customers",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/customers/update/{{tmpCustId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "customers",
+                        "update",
+                        "{{tmpCustId}}"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Temp\",\n    \"lastName\": \"Customer Updated\",\n    \"username\": \"temp_user\",\n    \"deliveryAddress\": \"KG 1 St\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 delete customers",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/customers/delete/{{tmpCustId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "customers",
+                        "delete",
+                        "{{tmpCustId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A2 CRUD cooks",
+              "item": [
+                {
+                  "name": "A2 save cooks",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/cooks/save",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "cooks",
+                        "save"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Temp\",\n    \"lastName\": \"Cook\",\n    \"phone\": \"0780000000\",\n    \"kitchenStation\": {\n        \"id\": \"{{ks1Id}}\"\n    },\n    \"menuSections\": [\n        {\n            \"id\": \"{{msPizzaId}}\"\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                          "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 all cooks (loads temp id)",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/cooks/all",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "cooks",
+                        "all"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                          "var list = pm.response.json();",
+                          "var map = {\"Temp\": \"tmpCookId\"};",
+                          "if (Array.isArray(list)) {",
+                          "  list.forEach(function (x) {",
+                          "    var k = x['firstName'];",
+                          "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                          "  });",
+                          "}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 get cooks by id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/cooks/{{tmpCookId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "cooks",
+                        "{{tmpCookId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 update cooks",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/cooks/update/{{tmpCookId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "cooks",
+                        "update",
+                        "{{tmpCookId}}"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Temp\",\n    \"lastName\": \"Cook Updated\",\n    \"phone\": \"0780000009\",\n    \"kitchenStation\": {\n        \"id\": \"{{ks1Id}}\"\n    },\n    \"menuSections\": [\n        {\n            \"id\": \"{{msPizzaId}}\"\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 delete cooks",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/cooks/delete/{{tmpCookId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "cooks",
+                        "delete",
+                        "{{tmpCookId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A2 CRUD food-orders",
+              "item": [
+                {
+                  "name": "A2 save food-orders",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/food-orders/save",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "food-orders",
+                        "save"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"orderDate\": \"{{d60}}\",\n    \"status\": \"PENDING\",\n    \"deliveryAddress\": \"Temp address\",\n    \"totalAmount\": 99999,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook1Id}}\"\n    }\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                          "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 all food-orders (loads temp id)",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/food-orders/all",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "food-orders",
+                        "all"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                          "var list = pm.response.json();",
+                          "var map = {\"99999\": \"tmpOrderId\"};",
+                          "if (Array.isArray(list)) {",
+                          "  list.forEach(function (x) {",
+                          "    var k = x['totalAmount'];",
+                          "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                          "  });",
+                          "}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 get food-orders by id",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/food-orders/{{tmpOrderId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "food-orders",
+                        "{{tmpOrderId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 update food-orders",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/food-orders/update/{{tmpOrderId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "food-orders",
+                        "update",
+                        "{{tmpOrderId}}"
+                      ]
+                    },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"orderDate\": \"{{d60}}\",\n    \"deliveryAddress\": \"Temp address updated\",\n    \"totalAmount\": 99999,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook1Id}}\"\n    }\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "A2 delete food-orders",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/api/food-orders/delete/{{tmpOrderId}}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "api",
+                        "food-orders",
+                        "delete",
+                        "{{tmpOrderId}}"
+                      ]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "A2 FAIL get unknown food order",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/api/food-orders/00000000-0000-0000-0000-000000000000",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "food-orders",
+                    "00000000-0000-0000-0000-000000000000"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Message contains: The food order with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The food order with that id does not exist\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "A2 FAIL update unknown food order",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/food-orders/update/00000000-0000-0000-0000-000000000000",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "food-orders",
+                    "update",
+                    "00000000-0000-0000-0000-000000000000"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"orderDate\": \"{{d60}}\",\n    \"deliveryAddress\": \"x\",\n    \"totalAmount\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Message contains: The food order with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The food order with that id does not exist\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "A2 FAIL delete unknown food order",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/api/food-orders/delete/00000000-0000-0000-0000-000000000000",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "food-orders",
+                    "delete",
+                    "00000000-0000-0000-0000-000000000000"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Message contains: The food order with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The food order with that id does not exist\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "description": "Each entity: save a temporary record, load its id, get, update and delete it, so the seed data stays untouched."
+        }
+      ]
+    },
+    {
+      "name": "B Derived queries",
+      "item": [
+        {
+          "name": "B1 customers by last name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/by-last-name?lastName=muhoza",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "by-last-name"
+              ],
+              "query": [
+                {
+                  "key": "lastName",
+                  "value": "muhoza"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"2 customers named Muhoza, sorted by firstName\", function () {",
+                  "  var l = pm.response.json(); pm.expect(l.length).to.equal(2);",
+                  "  pm.expect(l[0].firstName <= l[1].firstName).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "B1 FAIL nobody matches (empty list)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/by-last-name?lastName=zzzz",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "by-last-name"
+              ],
+              "query": [
+                {
+                  "key": "lastName",
+                  "value": "zzzz"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Empty list\", function () { pm.expect(pm.response.json().length).to.equal(0); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "B2 food orders by status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/by-status?status=PENDING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "by-status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"All PENDING, earliest orderDate first\", function () {",
+                  "  var l = pm.response.json(); pm.expect(l.length).to.be.above(0);",
+                  "  l.forEach(function (o) { pm.expect(o.status).to.equal(\"PENDING\"); });",
+                  "  for (var i = 1; i < l.length; i++) { pm.expect(l[i-1].orderDate <= l[i].orderDate).to.be.true; }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "B3 food orders in a date range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/between?start={{rangeStart}}&end={{rangeEnd}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "between"
+              ],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "{{rangeStart}}"
+                },
+                {
+                  "key": "end",
+                  "value": "{{rangeEnd}}"
+                }
+              ]
+            },
+            "description": "The paper uses 2026-10-01 to 2026-10-31. Dates here follow today's date because D1 forbids past dates. Edit start and end to the paper's dates if your seed uses them."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Rows returned\", function () { pm.expect(pm.response.json().length).to.be.above(0); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "C JPQL with joins",
+      "item": [
+        {
+          "name": "C1 cooks by menu section",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/by-menu-section?name=grills",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "by-menu-section"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "grills"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"At least one cook holds Grills\", function () { pm.expect(pm.response.json().length).to.be.above(0); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "C2 free kitchen stations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/kitchen-stations/free",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "kitchen-stations",
+                "free"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Kitchen station 4 is free\", function () {",
+                  "  var l = pm.response.json(); pm.expect(l.length).to.equal(1); pm.expect(l[0].stationNumber).to.equal(4);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "C3 menu sections nobody holds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/menu-sections/unused",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "menu-sections",
+                "unused"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Desserts is unused\", function () {",
+                  "  var l = pm.response.json(); pm.expect(l.length).to.equal(1); pm.expect(l[0].name).to.equal(\"Desserts\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "C4 customers of a cook",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/of-cook/{{cook1Id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "of-cook",
+                "{{cook1Id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Each customer listed once\", function () {",
+                  "  var l = pm.response.json(); var ids = l.map(function (c) { return c.id; });",
+                  "  pm.expect(l.length).to.be.above(0); pm.expect(new Set(ids).size).to.equal(ids.length);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "C4 FAIL unknown cook",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/of-cook/00000000-0000-0000-0000-000000000000",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "of-cook",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The cook with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The cook with that id does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "D Business rules",
+      "item": [
+        {
+          "name": "D1 safe saving (status in body is ignored)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d40}}\",\n    \"status\": \"DELIVERED\",\n    \"deliveryAddress\": \"KG 7 Ave, Kimihurura\",\n    \"totalAmount\": 11000,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook3Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "After this call, GET /api/food-orders/by-status?status=PENDING must show this order even though the body said DELIVERED."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D1 FAIL date in the past",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"2020-01-01\",\n    \"deliveryAddress\": \"x\",\n    \"totalAmount\": 1,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook3Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Message contains: Food order date cannot be in the past\", function () { pm.expect(pm.response.text()).to.include(\"Food order date cannot be in the past\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D1 FAIL cook already has an order that date",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/save",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "save"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"orderDate\": \"{{d7}}\",\n    \"deliveryAddress\": \"x\",\n    \"totalAmount\": 1,\n    \"customer\": {\n        \"id\": \"{{cust1Id}}\"\n    },\n    \"cook\": {\n        \"id\": \"{{cook3Id}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 409\", function () { pm.response.to.have.status(409); });",
+                  "pm.test(\"Message contains: Cook already has an order on that date\", function () { pm.expect(pm.response.text()).to.include(\"Cook already has an order on that date\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D2 status flow (PENDING to PREPARING)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o3Id}}/status?status=PREPARING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o3Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PREPARING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Message contains: Food order status updated successfully\", function () { pm.expect(pm.response.text()).to.include(\"Food order status updated successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D2 FAIL DELIVERED to PENDING",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o1Id}}/status?status=PENDING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o1Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Message contains: Cannot change status from DELIVERED to PENDING\", function () { pm.expect(pm.response.text()).to.include(\"Cannot change status from DELIVERED to PENDING\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D2 FAIL PENDING to DELIVERED",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/{{o5Id}}/status?status=DELIVERED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "{{o5Id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "DELIVERED"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Message contains: Cannot change status from PENDING to DELIVERED\", function () { pm.expect(pm.response.text()).to.include(\"Cannot change status from PENDING to DELIVERED\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D2 FAIL unknown food order",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/00000000-0000-0000-0000-000000000000/status?status=PREPARING",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "00000000-0000-0000-0000-000000000000",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PREPARING"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The food order with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The food order with that id does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D3 add one menu section to a cook",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/{{cook2Id}}/menu-sections/{{msGrillsId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "{{cook2Id}}",
+                "menu-sections",
+                "{{msGrillsId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Message contains: Menu section added to the cook\", function () { pm.expect(pm.response.text()).to.include(\"Menu section added to the cook\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D3 FAIL cook already has it",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/{{cook2Id}}/menu-sections/{{msGrillsId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "{{cook2Id}}",
+                "menu-sections",
+                "{{msGrillsId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 409\", function () { pm.response.to.have.status(409); });",
+                  "pm.test(\"Message contains: The cook already has that menu section\", function () { pm.expect(pm.response.text()).to.include(\"The cook already has that menu section\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D3 FAIL unknown cook",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/00000000-0000-0000-0000-000000000000/menu-sections/{{msGrillsId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "00000000-0000-0000-0000-000000000000",
+                "menu-sections",
+                "{{msGrillsId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The cook with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The cook with that id does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D3 FAIL unknown menu section",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/{{cook2Id}}/menu-sections/00000000-0000-0000-0000-000000000000",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "{{cook2Id}}",
+                "menu-sections",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: That menu section does not exist\", function () { pm.expect(pm.response.text()).to.include(\"That menu section does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D4 move a cook to another kitchen station",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/{{cook3Id}}/kitchen-station?stationNumber=4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "{{cook3Id}}",
+                "kitchen-station"
+              ],
+              "query": [
+                {
+                  "key": "stationNumber",
+                  "value": "4"
+                }
+              ]
+            },
+            "description": "Afterwards C2 (free kitchen stations) must return station 3 instead of 4."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Message contains: Kitchen station changed successfully\", function () { pm.expect(pm.response.text()).to.include(\"Kitchen station changed successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D4 FAIL station taken by another cook",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/{{cook2Id}}/kitchen-station?stationNumber=1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "{{cook2Id}}",
+                "kitchen-station"
+              ],
+              "query": [
+                {
+                  "key": "stationNumber",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 409\", function () { pm.response.to.have.status(409); });",
+                  "pm.test(\"Message contains: That kitchen station is taken by another cook\", function () { pm.expect(pm.response.text()).to.include(\"That kitchen station is taken by another cook\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D4 FAIL unknown cook",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/00000000-0000-0000-0000-000000000000/kitchen-station?stationNumber=4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "00000000-0000-0000-0000-000000000000",
+                "kitchen-station"
+              ],
+              "query": [
+                {
+                  "key": "stationNumber",
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The cook with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The cook with that id does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D4 FAIL unknown stationNumber",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/cooks/{{cook2Id}}/kitchen-station?stationNumber=99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cooks",
+                "{{cook2Id}}",
+                "kitchen-station"
+              ],
+              "query": [
+                {
+                  "key": "stationNumber",
+                  "value": "99"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The kitchen station with that stationNumber does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The kitchen station with that stationNumber does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "E Review",
+      "item": [
+        {
+          "name": "E1 write a review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/save?foodOrderId={{o1Id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "save"
+              ],
+              "query": [
+                {
+                  "key": "foodOrderId",
+                  "value": "{{o1Id}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dishName\": \"Brochettes\",\n    \"comment\": \"Well grilled and still hot on arrival\",\n    \"rating\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Message contains: Review saved successfully\", function () { pm.expect(pm.response.text()).to.include(\"Review saved successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E1 second review on order 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/save?foodOrderId={{o1Id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "save"
+              ],
+              "query": [
+                {
+                  "key": "foodOrderId",
+                  "value": "{{o1Id}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dishName\": \"Isombe\",\n    \"comment\": \"Tasty and generous portion\",\n    \"rating\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E1 review on order 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/save?foodOrderId={{o2Id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "save"
+              ],
+              "query": [
+                {
+                  "key": "foodOrderId",
+                  "value": "{{o2Id}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dishName\": \"Pizza Margherita\",\n    \"comment\": \"Crispy base, fresh basil\",\n    \"rating\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E1 FAIL order not DELIVERED",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/save?foodOrderId={{o5Id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "save"
+              ],
+              "query": [
+                {
+                  "key": "foodOrderId",
+                  "value": "{{o5Id}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dishName\": \"Soup\",\n    \"comment\": \"x\",\n    \"rating\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Message contains: Reviews are only for DELIVERED food orders\", function () { pm.expect(pm.response.text()).to.include(\"Reviews are only for DELIVERED food orders\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E1 FAIL unknown food order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/save?foodOrderId=00000000-0000-0000-0000-000000000000",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "save"
+              ],
+              "query": [
+                {
+                  "key": "foodOrderId",
+                  "value": "00000000-0000-0000-0000-000000000000"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dishName\": \"Soup\",\n    \"comment\": \"x\",\n    \"rating\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The food order with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The food order with that id does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E2 review history of a customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/customer/divine27",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "customer",
+                "divine27"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"3 reviews, newest reviewDate first\", function () {",
+                  "  var l = pm.response.json(); pm.expect(l.length).to.equal(3);",
+                  "  for (var i = 1; i < l.length; i++) { pm.expect(l[i-1].reviewDate >= l[i].reviewDate).to.be.true; }",
+                  "});",
+                  "var list = pm.response.json();",
+                  "var map = {\"Brochettes\": \"revBrochettesId\", \"Isombe\": \"revIsombeId\", \"Pizza Margherita\": \"revPizzaId\"};",
+                  "if (Array.isArray(list)) {",
+                  "  list.forEach(function (x) {",
+                  "    var k = x['dishName'];",
+                  "    if (map[k] !== undefined) { pm.collectionVariables.set(map[k], x.id); }",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E2 customer without reviews (empty list)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/customer/kevin_h",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "customer",
+                "kevin_h"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Empty list\", function () { pm.expect(pm.response.json().length).to.equal(0); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E3 FAIL food order has reviews",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/delete/{{o1Id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "delete",
+                "{{o1Id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 409\", function () { pm.response.to.have.status(409); });",
+                  "pm.test(\"Message contains: That food order has reviews, delete them first\", function () { pm.expect(pm.response.text()).to.include(\"That food order has reviews, delete them first\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E3 delete a review",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/delete/{{revPizzaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "delete",
+                "{{revPizzaId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Message contains: Review deleted successfully\", function () { pm.expect(pm.response.text()).to.include(\"Review deleted successfully\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "E3 FAIL unknown review",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/delete/00000000-0000-0000-0000-000000000000",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "delete",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Message contains: The review with that id does not exist\", function () { pm.expect(pm.response.text()).to.include(\"The review with that id does not exist\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "F Reports and bulk updates",
+      "item": [
+        {
+          "name": "F1 food orders per status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/stats/by-status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "stats",
+                "by-status"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"One row [status, count] per status\", function () {",
+                  "  var l = pm.response.json(); pm.expect(l.length).to.be.above(0);",
+                  "  l.forEach(function (r) { pm.expect(r.length).to.equal(2); });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "F2 cook is absent (cancel a day)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/cancel-day?cookId={{cook1Id}}&date={{d8}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "cancel-day"
+              ],
+              "query": [
+                {
+                  "key": "cookId",
+                  "value": "{{cook1Id}}"
+                },
+                {
+                  "key": "date",
+                  "value": "{{d8}}"
+                }
+              ]
+            },
+            "description": "Check the console: one UPDATE statement, no loop of single updates."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Message contains: food orders cancelled\", function () { pm.expect(pm.response.text()).to.include(\"food orders cancelled\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bonus",
+      "item": [
+        {
+          "name": "Bonus dashboard summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/dashboard/summary",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "dashboard",
+                "summary"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Summary has the six keys\", function () {",
+                  "  var s = pm.response.json();",
+                  "  [\"customers\",\"cooks\",\"freeKitchenStations\",\"ordersToday\",\"pending\",\"reviews\"].forEach(function (k) { pm.expect(s).to.have.property(k); });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bonus food orders page by page",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/food-orders/page?page=0&size=5&sort=orderDate,desc",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "food-orders",
+                "page"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                },
+                {
+                  "key": "sort",
+                  "value": "orderDate,desc"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Shows total pages and total elements\", function () {",
+                  "  var p = pm.response.json(); pm.expect(p).to.have.property(\"totalPages\"); pm.expect(p).to.have.property(\"totalElements\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
