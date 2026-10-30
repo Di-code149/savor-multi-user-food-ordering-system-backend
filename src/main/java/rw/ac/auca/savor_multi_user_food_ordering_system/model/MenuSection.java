@@ -16,6 +16,7 @@ public class MenuSection {
 
     private String name;
 
+    //cook is the owning side.
     @ManyToMany(mappedBy = "menuSections")
     @JsonIgnore
     private List<Cook> cooks = new ArrayList<>();

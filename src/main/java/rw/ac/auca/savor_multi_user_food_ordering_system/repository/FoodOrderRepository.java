@@ -17,13 +17,20 @@ import java.util.UUID;
 
 @Repository
 public interface FoodOrderRepository extends JpaRepository<FoodOrder, UUID> {
+    // The parameter is the enum itself, and the result starts with the earliest order date
     List<FoodOrder> findByStatusOrderByOrderDateAsc(OrderStatus status);
+
+    // Between includes both dates
     List<FoodOrder> findByOrderDateBetweenOrderByOrderDateAsc(LocalDate start, LocalDate end);
+
+    // Used by D1: the cook already has an order on that date that is not cancelled
     boolean existsByCookAndOrderDateAndStatusNot(Cook cook, LocalDate orderDate, OrderStatus status);
 
+    // JPQL GROUP BY returns each status plus its count as an Object[]
     @Query("SELECT o.status, COUNT(o) FROM FoodOrder o GROUP BY o.status")
     List<Object[]> countOrdersPerStatus();
 
+    // One UPDATE query. DELIVERED is passed as a parameter so those rows are never cancelled
     @Modifying
     @Query("UPDATE FoodOrder o SET o.status = :cancelled WHERE o.cook.id = :cookId AND o.orderDate = :date AND o.status <> :delivered")
     int cancelOrdersForCookOnDate(@Param("cookId") UUID cookId, @Param("date") LocalDate date, @Param("cancelled") OrderStatus cancelled, @Param("delivered") OrderStatus delivered);

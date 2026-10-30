@@ -14,6 +14,7 @@ public class FoodOrder {
 
     private LocalDate orderDate;
 
+    //store the status as text so the database shows PENDING instead of 0,1,2
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 

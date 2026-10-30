@@ -65,6 +65,7 @@ public class CookController {
         return ResponseEntity.ok(cookService.getByMenuSection(name));
     }
 
+    //404 for a missing cook/section, 409 if the cook already has it, 200 otherwise
     @PutMapping("/{cookId}/menu-sections/{menuSectionId}")
     public ResponseEntity<String> addMenuSection(@PathVariable UUID cookId, @PathVariable UUID menuSectionId) {
         String result = cookService.addMenuSection(cookId, menuSectionId);

@@ -29,6 +29,7 @@ public class FoodOrderService {
     private rw.ac.auca.savor_multi_user_food_ordering_system.repository.ReviewRepository reviewRepository;
 
 
+    // D1: reject past dates first, then check the cook's day, then force PENDING
     public String save(FoodOrder foodOrder) {
         if (foodOrder.getOrderDate() != null && foodOrder.getOrderDate().isBefore(LocalDate.now())) {
             return "Food order date cannot be in the past";
@@ -47,11 +48,13 @@ public class FoodOrderService {
             customerRepository.findById(foodOrder.getCustomer().getId())
                     .ifPresent(foodOrder::setCustomer);
         }
+        // Force PENDING so the client cannot create a DELIVERED order directly
         foodOrder.setStatus(OrderStatus.PENDING);
         foodOrderRepository.save(foodOrder);
         return "Food order saved successfully";
     }
 
+    // D2: only PENDING -> PREPARING/CANCELLED and PREPARING -> DELIVERED/CANCELLED are allowed
     public String updateStatus(UUID id, OrderStatus newStatus) {
         Optional<FoodOrder> existing = foodOrderRepository.findById(id);
         if (existing.isEmpty()) {
@@ -67,6 +70,7 @@ public class FoodOrderService {
             allowed = true;
         }
 
+        // DELIVERED and CANCELLED are final, so anything else goes to the error message
         if (!allowed) {
             return "Cannot change status from " + current + " to " + newStatus;
         }
@@ -110,6 +114,7 @@ public class FoodOrderService {
         return "Food order updated successfully";
     }
 
+    //IF REVIEWS exist, deleting the order would leave orphan reviews, so i block it here
     public String delete(UUID id) {
         Optional<FoodOrder> existing = foodOrderRepository.findById(id);
         if (existing.isEmpty()) {

@@ -27,6 +27,7 @@ public class DashboardService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+   //linkedhashmap keeps the keys in the order i put them, which is easier to read in postman
     public Map<String, Long> getSummary() {
         Map<String, Long> summary = new LinkedHashMap<>();
         summary.put("customers", customerRepository.count());

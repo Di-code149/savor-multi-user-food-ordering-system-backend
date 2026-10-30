@@ -96,6 +96,7 @@ public class CookService {
         return cookRepository.findCooksByMenuSectionName(name);
     }
 
+    // cook owns the relationship , so i add the section to the cook's list and save the cook
     public String addMenuSection(UUID cookId, UUID menuSectionId) {
         Optional<Cook> cookOpt = cookRepository.findById(cookId);
         if (cookOpt.isEmpty()) {
@@ -117,6 +118,7 @@ public class CookService {
         return "Menu section added to the cook";
     }
 
+    //check the station exists and is free before moving the cook to it
     public String changeKitchenStation(UUID cookId, int stationNumber) {
         Optional<Cook> cookOpt = cookRepository.findById(cookId);
         if (cookOpt.isEmpty()) {

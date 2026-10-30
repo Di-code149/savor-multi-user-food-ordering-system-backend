@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @Repository
 public interface CookRepository extends JpaRepository<Cook, UUID> {
+    // join is needed because menuSections is a collection; LOWER makes the search case-insensitive
     @Query("SELECT c FROM Cook c JOIN c.menuSections m WHERE LOWER(m.name) = LOWER(:name)")
     List<Cook> findCooksByMenuSectionName(@Param("name") String name);
 

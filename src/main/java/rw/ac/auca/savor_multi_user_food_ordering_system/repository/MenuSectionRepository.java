@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface MenuSectionRepository extends JpaRepository<MenuSection, UUID> {
+    // IS EMPTY checks the cooks collection directly instead of counting
     @Query("SELECT m FROM MenuSection m WHERE m.cooks IS EMPTY")
     List<MenuSection> findUnusedMenuSections();
 }

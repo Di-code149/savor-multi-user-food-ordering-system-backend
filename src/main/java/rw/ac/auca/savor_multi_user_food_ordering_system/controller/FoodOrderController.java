@@ -21,6 +21,7 @@ public class FoodOrderController {
     @Autowired
     private FoodOrderService foodOrderService;
 
+    // the service returns a message, so the controller maps it to 201, 400 or 409
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody FoodOrder foodOrder) {
         String result = foodOrderService.save(foodOrder);

@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface KitchenStationRepository extends JpaRepository<KitchenStation, UUID> {
+    // NOT EXISTS means no cook points to this station, so the station is free
     @Query("SELECT k FROM KitchenStation k WHERE NOT EXISTS (SELECT c FROM Cook c WHERE c.kitchenStation = k) ORDER BY k.stationNumber ASC")
     List<KitchenStation> findFreeKitchenStations();
 

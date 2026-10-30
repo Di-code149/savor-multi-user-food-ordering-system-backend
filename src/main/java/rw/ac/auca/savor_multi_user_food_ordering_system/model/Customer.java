@@ -15,6 +15,7 @@ public class Customer {
 
     private String lastName;
 
+    //username is the business key used in review URLS, so two customers can't share it
     @Column(unique = true, nullable = false)
     private String username;
 

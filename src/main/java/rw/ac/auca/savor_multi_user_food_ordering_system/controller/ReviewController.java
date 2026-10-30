@@ -17,6 +17,7 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
+    //201 when saved, 404 for a missing order, 400 when the order is not delivered
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestParam UUID foodOrderId, @RequestBody Review review) {
         String result = reviewService.save(foodOrderId, review);

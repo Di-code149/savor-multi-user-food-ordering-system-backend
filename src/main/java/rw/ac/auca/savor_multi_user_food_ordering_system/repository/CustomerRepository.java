@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
+    // IgnoreCase makes "muhoza" match "Muhoza"; OrderByFirstNameAsc sorts the result A-Z
     List<Customer> findByLastNameIgnoreCaseOrderByFirstNameAsc(String lastName);
 
     @Query("SELECT DISTINCT o.customer FROM FoodOrder o WHERE o.cook.id = :cookId")

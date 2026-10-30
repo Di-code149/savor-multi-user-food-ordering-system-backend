@@ -20,6 +20,7 @@ public class Review {
 
     private LocalDate reviewDate;
 
+    //one order can have many reviews
     @ManyToOne
     @JoinColumn(name = "food_order_id")
     private FoodOrder foodOrder;

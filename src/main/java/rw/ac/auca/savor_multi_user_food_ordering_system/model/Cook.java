@@ -23,6 +23,7 @@ public class Cook {
     @JoinColumn(name = "kitchen_station_id", nullable = true)
     private KitchenStation kitchenStation;
 
+    //cook owns the many-to-many , so saving a cook writes the rows into cook_menu_section
     @ManyToMany
     @JoinTable(
         name = "cook_menu_section",
