@@ -1,6 +1,10 @@
 package rw.ac.auca.savor_multi_user_food_ordering_system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +32,8 @@ public class FoodOrderController {
         if ("Food order saved successfully".equals(result)) {
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } else if ("Food order date cannot be in the past".equals(result)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        } else if ("Food order date is required".equals(result)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } else if ("Cook already has an order on that date".equals(result)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
@@ -110,20 +116,20 @@ public class FoodOrderController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<org.springframework.data.domain.Page<FoodOrder>> getPage(
+    public ResponseEntity<Page<FoodOrder>> getPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "orderDate,desc") String sort) {
-        org.springframework.data.domain.Sort sortObj = org.springframework.data.domain.Sort.unsorted();
+        Sort sortObj = Sort.unsorted();
         if (sort != null && !sort.isBlank()) {
             String[] parts = sort.split(",");
             String property = parts[0];
-            org.springframework.data.domain.Sort.Direction direction = (parts.length > 1 && parts[1].equalsIgnoreCase("desc"))
-                    ? org.springframework.data.domain.Sort.Direction.DESC
-                    : org.springframework.data.domain.Sort.Direction.ASC;
-            sortObj = org.springframework.data.domain.Sort.by(direction, property);
+            Sort.Direction direction = (parts.length > 1 && parts[1].equalsIgnoreCase("desc"))
+                    ? Sort.Direction.DESC
+                    : Sort.Direction.ASC;
+            sortObj = Sort.by(direction, property);
         }
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortObj);
+        Pageable pageable = PageRequest.of(page, size, sortObj);
         return ResponseEntity.ok(foodOrderService.getPage(pageable));
     }
 }

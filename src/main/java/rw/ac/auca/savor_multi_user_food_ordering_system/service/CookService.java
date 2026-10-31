@@ -129,10 +129,14 @@ public class CookService {
             return "The kitchen station with that stationNumber does not exist";
         }
         KitchenStation targetStation = stationOpt.get();
+        Cook cook = cookOpt.get();
+        if (cook.getKitchenStation() != null
+                && cook.getKitchenStation().getId().equals(targetStation.getId())) {
+            return "Kitchen station changed successfully";
+        }
         if (cookRepository.existsByKitchenStation(targetStation)) {
             return "That kitchen station is taken by another cook";
         }
-        Cook cook = cookOpt.get();
         cook.setKitchenStation(targetStation);
         cookRepository.save(cook);
         return "Kitchen station changed successfully";

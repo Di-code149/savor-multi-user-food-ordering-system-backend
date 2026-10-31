@@ -1,12 +1,17 @@
 package rw.ac.auca.savor_multi_user_food_ordering_system.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import rw.ac.auca.savor_multi_user_food_ordering_system.model.Cook;
 import rw.ac.auca.savor_multi_user_food_ordering_system.model.FoodOrder;
 import rw.ac.auca.savor_multi_user_food_ordering_system.model.OrderStatus;
 import rw.ac.auca.savor_multi_user_food_ordering_system.repository.CookRepository;
 import rw.ac.auca.savor_multi_user_food_ordering_system.repository.CustomerRepository;
 import rw.ac.auca.savor_multi_user_food_ordering_system.repository.FoodOrderRepository;
+import rw.ac.auca.savor_multi_user_food_ordering_system.repository.ReviewRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,18 +31,21 @@ public class FoodOrderService {
     private CookRepository cookRepository;
 
     @Autowired
-    private rw.ac.auca.savor_multi_user_food_ordering_system.repository.ReviewRepository reviewRepository;
+    private ReviewRepository reviewRepository;
 
 
-    // D1: reject past dates first, then check the cook's day, then force PENDING
+    // D1: reject null or past dates first, then check the cook's day, then force PENDING
     public String save(FoodOrder foodOrder) {
-        if (foodOrder.getOrderDate() != null && foodOrder.getOrderDate().isBefore(LocalDate.now())) {
+        if (foodOrder.getOrderDate() == null) {
+            return "Food order date is required";
+        }
+        if (foodOrder.getOrderDate().isBefore(LocalDate.now())) {
             return "Food order date cannot be in the past";
         }
         if (foodOrder.getCook() != null && foodOrder.getCook().getId() != null) {
-            Optional<rw.ac.auca.savor_multi_user_food_ordering_system.model.Cook> cookOpt = cookRepository.findById(foodOrder.getCook().getId());
+            Optional<Cook> cookOpt = cookRepository.findById(foodOrder.getCook().getId());
             if (cookOpt.isPresent()) {
-                rw.ac.auca.savor_multi_user_food_ordering_system.model.Cook cook = cookOpt.get();
+                Cook cook = cookOpt.get();
                 foodOrder.setCook(cook);
                 if (foodOrderRepository.existsByCookAndOrderDateAndStatusNot(cook, foodOrder.getOrderDate(), OrderStatus.CANCELLED)) {
                     return "Cook already has an order on that date";
@@ -132,7 +140,7 @@ public class FoodOrderService {
         return foodOrderRepository.findByStatusOrderByOrderDateAsc(status);
     }
 
-    public List<FoodOrder> getBetween(java.time.LocalDate start, java.time.LocalDate end) {
+    public List<FoodOrder> getBetween(LocalDate start, LocalDate end) {
         return foodOrderRepository.findByOrderDateBetweenOrderByOrderDateAsc(start, end);
     }
 
@@ -140,13 +148,13 @@ public class FoodOrderService {
         return foodOrderRepository.countOrdersPerStatus();
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public String cancelDay(UUID cookId, LocalDate date) {
         int count = foodOrderRepository.cancelOrdersForCookOnDate(cookId, date, OrderStatus.CANCELLED, OrderStatus.DELIVERED);
         return count + " food orders cancelled";
     }
 
-    public org.springframework.data.domain.Page<FoodOrder> getPage(org.springframework.data.domain.Pageable pageable) {
+    public Page<FoodOrder> getPage(Pageable pageable) {
         return foodOrderRepository.findAll(pageable);
     }
 }

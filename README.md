@@ -72,6 +72,20 @@ Steps to Run
    ```
 4. The server will start on port `8080`.
 
+## Problems I Faced
+
+During the development of this project, I encountered several challenges while implementing the relationships between entities, handling order validation, and testing the API.
+
+- **JSON Infinite Recursion:** The relationship between `Cook` and `MenuSection` caused a JSON loop because both entities reference each other. I addressed this by using `@JsonIgnore` on the appropriate relationship to prevent infinite serialization.
+
+- **Cancelled Orders and Date Validation:** Initially, checking whether a cook already had an order on a particular date could cause a cancelled order to block a new order. The validation needed to ignore orders with `CANCELLED` status while still preventing conflicting active orders.
+
+- **JPQL Join and Case-Insensitive Search:** Finding cooks by menu-section name required joining the `Cook` and `MenuSection` entities. I used JPQL `JOIN` together with `LOWER()` so that the search works regardless of uppercase or lowercase letters.
+
+- **Deleting Orders with Reviews:** An order should not be deleted while it still has associated reviews. I implemented a check for existing reviews before deletion and return an appropriate conflict response when reviews are present.
+
+- **Postman Seed Request Order:** Adding initial data through Postman required requests to run in the correct order. For example, menu sections and kitchen stations must exist before assigning them to cooks, and customers and cooks must exist before creating food orders. Running requests in the wrong order can cause missing-reference errors.
+
 ---
 
 4. Postman Collection & Testing
@@ -100,7 +114,7 @@ Test Execution Procedure
 
 API Endpoints Reference
 
-### Part A: CRUD Endpoints
+Part A: CRUD Endpoints
 | Requirement | Method | Endpoint | Success / Error |
 | :--- | :--- | :--- | :--- |
 | **A2** | `POST` | `/api/{path}/save` | `201 Created` — `"<Entity> saved successfully"` |
@@ -110,7 +124,7 @@ API Endpoints Reference
 | **A2** | `DELETE`| `/api/{path}/delete/{id}` | `200 OK` or `404 Not Found` |
 *`{path}` corresponds to `menu-sections`, `kitchen-stations`, `cooks`, `customers`, and `food-orders`.*
 
-### Part B: Derived Queries
+B: Derived Queries
 | ID | Method | Endpoint | Query Type | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **B1** | `GET` | `/api/customers/by-last-name?lastName=muhoza` | DERIVED | `findByLastNameIgnoreCaseOrderByFirstNameAsc` |
@@ -141,7 +155,7 @@ Part E: Review Entity
 | **E3** | `DELETE`| `/api/reviews/delete/{id}` | CRUD | Deletes review |
 | **E3** | `DELETE`| `/api/food-orders/delete/{id}` | DERIVED | Blocks deletion (409) if food order has associated reviews |
 
-### Part F: Reports and Bulk Updates
+Part F: Reports and Bulk Updates
 | ID | Method | Endpoint | Query Type | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **F1** | `GET` | `/api/food-orders/stats/by-status` | JPQL | `GROUP BY o.status` with `COUNT(o)` |
